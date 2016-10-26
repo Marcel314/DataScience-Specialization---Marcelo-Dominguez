@@ -1,0 +1,135 @@
+---
+title: "Practical Machine Learning Course Project"
+author: "by Marcelo Dominguez"
+output:
+  html_document:
+    toc: yes
+  pdf_document:
+    highlight: zenburn
+    toc: yes
+---
+
+## Requeriments.
+
+### Background.   
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. 
+
+More information is available from the website here: <http://groupware.les.inf.puc-rio.br/har>. 
+
+### Data.   
+The **training** data for this project are available here: <https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv>   
+The **test** data are available here: <https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv>   
+The **data** for this project come from this source: <http://groupware.les.inf.puc-rio.br/har>    
+
+### Goal.   
+The goal of your project is to predict the manner in which they did the exercise. This is the "classe" variable in the training set. You may use any of the other variables to predict with. You should create a report describing how you built your model, how you used cross validation, what you think the expected out of sample error is, and why you made the choices you did. You will also use your prediction model to predict 20 different test cases. 
+
+## Loading and Cleaning Data.
+First step is to load all R required libraries.
+
+```{r,echo=TRUE}
+
+library(caret)           # Clasification and Regression training
+library(randomForest)    # Random fores functions-for classification and regression.
+library(rpart)           # Recursive partitioning and regression trees
+
+library(rpart.plot)      # Ploting Rpart Models 
+library(e1071)           
+``` 
+
+Once loaded all required libraries we´re downloading training and test datasets.   
+
+```{r,echo=FALSE}
+
+# downloading training data
+training_dataset   = 'training_dataset.csv'
+training_dataset_url    = 'http://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv'
+download.file(training_dataset_url, destfile = training_dataset)
+
+# downloading testing data
+test_dataset = 'test_dataset.csv'
+test_dataset_url  = 'http://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv'
+download.file(test_dataset_url,destfile = test_dataset )
+```
+
+Now we are going to convert raw downloaded data into a tidy data set by performing this operations:  
+- Remove NAs, "" and "#DIV/0!" values. 
+```{r,echo=FALSE}
+training_set = read.csv(training_dataset, na.strings=c("NA","#DIV/0!", ""))
+testing_set = read.csv(test_dataset , na.strings=c("NA", "#DIV/0!", ""))
+```
+- Remove variables with time dependence values.   
+```{r,echo=FALSE}
+training_set = training_set[,colSums(is.na(training_set)) == 0]
+testing_set = testing_set[,colSums(is.na(testing_set)) == 0]
+```
+- Remove not needed fields this this analysis.   
+```{r,echo=FALSE}
+training_set = training_set[,-c(1:7)]
+testing_set = testing_set[,-c(1:7)]
+```
+
+## Cross-Validation.
+Training data set was partitioned into 2 subsets to allow crossvalidation (25% - 75%).   
+```{r,echo=TRUE}
+set.seed(31415)  
+sub_training_set = createDataPartition(y=training_set$classe, p=0.75, list=FALSE)
+sub_Training = training_set[sub_training_set, ] 
+sub_Testing = training_set[-sub_training_set, ]
+```
+
+
+## Results.
+The "classe" is an unordered factor variable, decision tree and random forest algorithms are non linear models known for their ability of iteratively split variables intro homogeneus groups and very useful for detecting the features that are important for classification. For this reason we selected both algorithms for this report.
+ 
+### MODEL 1: Decission Trees.
+```{r,echo=TRUE}
+# Decission trees
+model_dec_trees = rpart(classe ~ ., data=sub_Training, method="class")
+model_dec_trees_prediction = predict(model_dec_trees, sub_Testing, type = "class")
+```
+
+From Confusion Matrix we can obtain the accuracy for this model, was 0.7397 for a 95% CI : **(0.7273, 0.752)**.   
+Expected out-of-sample error is estimated at **0.005,a 0.5%**.  
+```{r,echo=TRUE}
+rpart.plot(model_dec_trees, main="Decision Tree", extra=102, under=TRUE, faclen=0)
+# Testing results
+confusionMatrix(model_dec_trees_prediction, sub_Testing$classe)
+```
+
+### MODEL 2: Random Forest.
+
+```{r,echo=TRUE}
+# Random forest
+model_rnd_forest = randomForest(classe ~. , data=sub_Training, method="class")
+model_rnd_forest_prediction = predict(model_rnd_forest, sub_Testing, type = "class")
+```
+
+From Confusion Matrix we can obtain the accuracy for this model was 0.9951 for a 95% CI : **(0.9927, 0.9969)**.   
+Expected out-of-sample error is estimated at **0.005,a 0.5%**.   
+```{r,echo=TRUE}
+# Testing results
+confusionMatrix(model_rnd_forest_prediction, sub_Testing$classe)
+```
+
+## Conclusions.
+The Random Forest fit is clearly more accurate than Decision Tree model (0.99 vs 0.74).  
+For testing the 20 test-cases we select the Random Forest method.   
+With an accuracy  above 99% on our cross-validation data, we can expect that all of the submitted test cases to be correct.
+
+## Submit.
+We selected the *Random Forest Model*, we used this model for 20 test cases and submit the 20 files obtained with the next code (as required in Coursera instructions).   
+```{r,echo=TRUE}
+#Random Forest
+selected_prediction <- predict(model_rnd_forest, testing_set, type="class")
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+pml_write_files(selected_prediction)
+#this code make 20 files, one for every test case
+```
+ 

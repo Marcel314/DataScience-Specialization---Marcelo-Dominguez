@@ -1,0 +1,132 @@
+---
+Author: Marcelo Dominguez
+Course: Exploratory Data Analysis
+Title: Statistical Inference Course Project - Part 2
+---
+
+# Statistical Inference Course Project - Part 2
+**Course    :** Exploratory Data Analysis   
+**Document  :** Statistical Inference Course Project - Part 2   
+**Author    :** Marcelo Dominguez   
+
+This report contains required analysis for second part of Statistical Inference Course Project wich is a part of **Johns Hopkins DataScience Specialization**.   
+I´m going to analyze the ToothGrowth data in the R datasets package by performing this steps:  
+-  **(1) Load data**      : load the ToothGrowth data and perform some basic exploratory data analyses.   
+-  **(2) Summarize data** : provide a basic summary of the data.   
+-  **(3) Comparing data** : Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose.   
+-  **(4) Conclusions**    : State your conclusions and the assumptions needed for your conclusions.   
+<BR>
+
+
+# 1. Load data.
+Load the ToothGrowth data and perform some basic exploratory data analyse.   
+
+```{r}
+
+# 1. Loading libraries and datasets
+library(datasets)
+library(ggplot2)
+data(ToothGrowth)
+
+# 2. Checking readed variables
+str(ToothGrowth)
+
+# 3. Getting number of rows of dataset
+dataset_rows = nrow(ToothGrowth)
+sprintf("ToothGrowth dataset contains %.1f rows",dataset_rows)
+
+# 4. Alias for readed dataset
+my_data = ToothGrowth
+
+# 4. Converting 'dose' variable from 'Numeric' to 'Factor'.
+my_data$dose = as.factor(my_data$dose)
+```
+
+
+# 2. Summarize data.
+Provide a basic summary of the data.   
+
+```{r}
+# 5. Getting summarized data for all dataset variables.
+summary(my_data)
+
+# 6. Getting first 20 elements of dataset.
+head(my_data,20)
+
+# 6. Getting last 20 elements of dataset.
+tail(my_data,20)
+
+# 7. Spliting of cases between different dose and delivery methods.
+table(my_data$dose,my_data$supp)
+
+````
+
+
+```{r,echo=FALSE}
+ggplot(aes(x=dose, y=len), data=my_data) + geom_boxplot(aes(fill=dose))
+````
+
+Visualization of tooth growth as function of supplement type.   
+```{r,echo=FALSE}
+ggplot(aes(x=supp, y=len), data=my_data) + geom_boxplot(aes(fill=supp))
+````
+
+
+# 3. Comparing data.
+Use confidence intervals and/or hypothesis tests to compare tooth growth b y supp and dose.   
+
+Check for group differences due to different supplement type assuming unequal variances between the two groups.   
+```{r}
+# 8. 
+t.test(len ~ supp, data = my_data)
+````
+
+The p-value is 0.06 and the confidence interval contains zero so we can not reject the null hypothesis that the different supplement types have no effect on tooth length.
+
+I´m creating 3 different groups per 'dose' variable value and check its differences assuming unequal variances between the two groups.
+
+```{r}
+# 9. Creating 3 groups per dose level pairs
+my_data.doses_A = subset (my_data, dose %in% c(0.5, 1.0)) 
+my_data.doses_B = subset (my_data, dose %in% c(0.5, 2.0)) 
+my_data.doses_C = subset (my_data, dose %in% c(1.0, 2.0)) 
+```
+
+First I´m checking group differences due to different 'dose' levels (0.5 - 1.0).
+```{r}
+# 10. Checking groups differences
+t.test(len ~ dose, data = my_data.doses_A)
+```
+
+Now I´m going to check group differences due to different 'dose' levels (0.5 - 2.0).
+```{r}
+# 11. Checking differences -> (0,5 - 2.0)
+t.test(len ~ dose, data = my_data.doses_B)
+```
+
+Finally, I´m checking group differences due to different 'dose' levels (1.0 - 2.0).
+```{r}
+# 12. Checking differences -> (1.0 - 2.0)
+t.test(len ~ dose, data = my_data.doses_C)
+````
+
+The p-value is less than **'0.05'** for all **'dose'** level pair and the confidence interval does not contais zero value so we can reject the null hypothesis and assume that increasing 'dose' level leads to an increase in tooth length.
+
+
+# 4. Conclusions.
+State your conclusions and the assumptions needed for your conclusions.   
+   
+**Conclusions**
+
+- Supplement type has no effect on tooth growth.
+- Inreasing the dose level leads to increased tooth growth.
+
+**Assumptions**
+
+- The experiment was done with random assignment of guinea pigs to different dose level categories and supplement type to control for confounders that might affect the outcome.
+- Members of the sample population, i.e. the 60 guinea pigs, are representative of the entire population of guinea pigs. This assumption allows us to generalize the results.
+- For the t-tests, the variances are assumed to be different for the two groups being compared. This assumption is less stronger than the case in which the variances are assumed to be equal.
+
+
+
+

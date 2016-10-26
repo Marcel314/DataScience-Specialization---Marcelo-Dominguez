@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sample Data App</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Sample Data App">
+  <meta name="author" content="Marcelo Domínguez, June 2015">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Sample Data App</h1>
+    <h2>Body Mass Index Calculator</h2>
+    <p>Marcelo Domínguez, June 2015<br/>Computer Engineer</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Introduction.</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>This document presents a Shiny app developed to calculate the Body Mass Index of a person, with the weight and height information.</p></li>
+<li><p>The Shiny App also gives as result the clasification of the Body Mass Index and a suggested range of weight.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Body Mass Index Calculator.</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>BMi Definition.</h3>
+
+<p>Body Mass Index (BMI) is a number calculated from a person&#39;s weight and height. BMI is a fairly reliable indicator of body fatness for most people. BMI does not measure body fat directly, but research has shown that BMI correlates to direct measures of body fat, such as underwater weighing and dual energy x-ray absorptiometry (DXA).1, 2 BMI can be considered an alternative for direct measures of body fat. Additionally, BMI is an inexpensive and easy-to-perform method of screening for weight categories that may lead to health problems.[1]</p>
+
+<h3>Use of BMI.</h3>
+
+<p>BMI is used as a screening tool to identify possible weight problems for adults. However, BMI is not a diagnostic tool. For example, a person may have a high BMI. However, to determine if excess weight is a health risk, a healthcare provider would need to perform further assessments. These assessments might include skinfold thickness measurements, evaluations of diet, physical activity, family history, and other appropriate health screenings.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Body Mass Index Calculator: Application.</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>In following image we can see the sample application published in the following website:
+<a href="https://mdominguez.shinyapps.io/ddp_project">https://mdominguez.shinyapps.io/ddp_project</a></p>
+
+<p><center><img src="figures/app.png" height="400px"/></center></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Body Mass Index Calculator: Code</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>This is the code used in <strong>server.R</strong> to calculate the classification.   </p>
+
+<pre><code class="r">output$BMIcategory &lt;- renderText({
+    BMI &lt;- round((input$weight / ((input$height / 100)^2)),2)
+    if(BMI &lt; 16.00) {category &lt;- (&quot;Severe Thinness&quot;)}
+    if(16.00 &lt;= BMI &amp; BMI &lt;= 16.99) {category &lt;- (&quot;Moderate thinness&quot;)}
+    if(17.00 &lt;= BMI &amp; BMI &lt;= 18.49) {category &lt;- (&quot;Mild thinness&quot;)}
+    if(18.50 &lt;= BMI &amp; BMI &lt;= 24.99) {category &lt;- (&quot;Normal range&quot;)}
+    if(25.00 &lt;= BMI &amp; BMI &lt;= 29.99) {category &lt;- (&quot;Pre-obese&quot;)}
+    if(30.00 &lt;= BMI &amp; BMI &lt;= 34.99) {category &lt;- (&quot;Obese class I&quot;)}
+    if(35.00 &lt;= BMI &amp; BMI &lt;= 39.99) {category &lt;- (&quot;Obese class II&quot;)}
+    if(BMI &gt;= 40.00) {category &lt;- (&quot;Obese Class III&quot;)}            
+    paste(&quot;Your BMI Category : &quot;,category)})
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Body Mass Index Calculator: Results.</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>In the next image we can see output data for default input parameters:
+<center><img src="figures/screenshot-out.png" height="350px"/></center></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>References</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>[1] Body Mass Index on Wikipedia:<br>
+<a href="https://en.wikipedia.org/?title=Body_mass_index">https://en.wikipedia.org/?title=Body_mass_index</a>   </p>
+
+<p>[2] World Health Organization:<br>
+<a href="http://www.cdc.gov/healthyweight/assessing/bmi/adult_bmi/index.html">http://www.cdc.gov/healthyweight/assessing/bmi/adult_bmi/index.html</a>    </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Introduction.'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Body Mass Index Calculator.'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Body Mass Index Calculator: Application.'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Body Mass Index Calculator: Code'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Body Mass Index Calculator: Results.'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='References'>
+         6
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

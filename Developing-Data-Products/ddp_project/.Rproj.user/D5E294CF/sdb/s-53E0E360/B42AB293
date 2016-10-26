@@ -1,0 +1,17 @@
+{
+    "contents" : "\nlibrary(shiny)\n\n# ui.R\n\nshinyUI(fluidPage(\n        titlePanel(\"Sample Data App:  Body Mass Index Calculator \"),\n        sidebarLayout(position = \"right\",\n                sidebarPanel(h4(\"Your BMI:\"),\n                             br(),\n                             textOutput(\"BMI\"),\n                             br(),\n                             textOutput(\"BMIcategory\"),\n                             br(),\n                             textOutput(\"sweight\"),\n                             br(),\n                             textOutput(\"maxweight\"),\n                             br(),\n                             textOutput(\"minweight\"),\n                             br(),\n                             textOutput(\"sheight\"),\n                             br()\n                             ),\n                mainPanel(\n                  \n                    \n                        h4(\"About BMI.\", aling = \"center\"),        \n                        div(\"Body Mass Index (BMI) is a person's weight in kilograms divided by the square of height in meters.\"),\n                        div(\"A high BMI can be an indicator of high body fatness.\"),\n                        div(\"BMI can be used to screen for weight categories that may lead to health problems but it is not diagnostic of the body fatness or health of an individual.\"),\n                        br(),\n                        \n                        h4(\"About this Application.\", aling = \"center\"),        \n                        div(\"This App is designed to calculate your BMI and give you a classification category. \"),\n                        div(\"To use the app please select your height and weigth below and make clic on the 'Calculate your BMI' button\"),\n                        br(),\n                        \n                        h4(\"Input Data.\", aling = \"center\"),        \n                        sliderInput(\"height\", label = h5(\"Height in Centimeters\"),min = 50, max = 250, value = 178, step = 1, width = \"150%\", animate = TRUE),\n                        br(),\n                        sliderInput(\"weight\", label = h5(\"Weight in Kilograms\"), min = 20, max = 500, value = 80, step = 0.1, width = \"150%\", animate = TRUE),\n                        br(),\n                        submitButton(h5(\"Calculate your BMI\")),\n                        br()\n                        )\n                    )\n                )\n        )\n",
+    "created" : 1434909430854.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1970517830",
+    "id" : "B42AB293",
+    "lastKnownWriteTime" : 1434911708,
+    "path" : "~/Projects/datascience-specialization/Files-mdominguez/C09 - Developing Data Products/Marcel_2/App-bmi/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

@@ -1,0 +1,17 @@
+{
+    "contents" : "\nlibrary(shiny)\n\nshinyServer(function(input, output) {\n        output$BMI <- renderText({\n                BMI <- round((input$weight / ((input$height / 100)^2)),2)\n                paste(\"Your BMI : \",BMI, \" Kg/m2\")})\n\n        output$BMIcategory <- renderText({\n                BMI <- round((input$weight / ((input$height / 100)^2)),2)\n                if(BMI < 16.00) {category <- (\"Severe Thinness\")}\n                if(16.00 <= BMI & BMI <= 16.99) {category <- (\"Moderate thinness\")}\n                if(17.00 <= BMI & BMI <= 18.49) {category <- (\"Mild thinness\")}\n                if(18.50 <= BMI & BMI <= 24.99) {category <- (\"Normal range\")}\n                if(25.00 <= BMI & BMI <= 29.99) {category <- (\"Pre-obese\")}\n                if(30.00 <= BMI & BMI <= 34.99) {category <- (\"Obese class I\")}\n                if(35.00 <= BMI & BMI <= 39.99) {category <- (\"Obese class II\")}\n                if(BMI >= 40.00) {category <- (\"Obese Class III\")}            \n                paste(\"Your BMI Category : \",category)})\n        \n        output$sweight <- renderText({paste(\"Your Weight : \", input$weight,\" Kg.\")})        \n        \n        output$minweight <- renderText({\n                minw <- round((18.5 * ((input$height / 100)^2)),2)\n                paste(\"Minimun Suggested Weight : \", minw,\" Kg.\")})        \n        \n        output$maxweight <- renderText({\n                maxw <- round((24.99 * ((input$height / 100)^2)),2)\n                paste(\"Maximun Suggested Weight:\", maxw,\" Kg.\")})        \n\n        output$sheight <- renderText({\n                paste(\"Your Current Height: \",input$height,\" cm.\")})\n        \n        })",
+    "created" : 1434909428992.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3261997753",
+    "id" : "8077A0A7",
+    "lastKnownWriteTime" : 1434910938,
+    "path" : "~/Projects/datascience-specialization/Files-mdominguez/C09 - Developing Data Products/Marcel_2/App-bmi/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "type" : "r_source"
+}
